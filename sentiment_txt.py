@@ -27,6 +27,7 @@
 # from: https://github.com/googleapis/python-language/blob/main/samples/v1/language_sentiment_text.py
 import json
 from flask import jsonify
+import functions_framework
 
 from google.cloud import language_v1
 
@@ -62,20 +63,7 @@ def sample_analyze_sentiment(text_content):
             response.document_sentiment.magnitude
         )
     )
-    # Get sentiment for all sentences in the document
-    return_data = []
-    for sentence in response.sentences:
-        print(u"Sentence text: {}".format(sentence.text.content))
-        print(u"Sentence sentiment score: {}".format(sentence.sentiment.score))
-        print(u"Sentence sentiment magnitude: {}".format(sentence.sentiment.magnitude))
-        return_data.append((sentence.sentiment.score, sentiment.magnitude))
-
-
-    # Get the language of the text, which will be the same as
-    # the language specified in the request or, if not specified,
-    # the automatically-detected language.
-    print(u"Language of the text: {}".format(response.language))
-    return return_data
+    return ((response.document_sentiment.score, response.document_sentiment.magnitude))
 
 
 def parse_udf(request_data):
@@ -84,7 +72,9 @@ def parse_udf(request_data):
         print(row)    
         scores = sample_analyze_sentiment(row[3])
         responses.append(scores)
+    return responses
 
+@functions_framework.http
 def sentiment(request):
     request_json = request.get_json()
     sentiment_scores = parse_udf(request_json)
