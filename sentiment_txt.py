@@ -86,6 +86,20 @@ def hello_world(request):
 
 def main():
     import argparse
+    # sample request example from https://cloud.google.com/bigquery/docs/reference/standard-sql/remote-functions
+    sample_request="""{
+ "requestId": "124ab1c",
+ "caller": "//bigquery.googleapis.com/projects/myproject/jobs/myproject:US.bquxjob_5b4c112c_17961fafeaf",
+ "sessionUser": "test-user@test-company.com",
+ "userDefinedContext": {
+  "key1": "value1",
+  "key2": "v2"
+ },
+ "calls": [
+  [null, 1, "", "abc"],
+  ["abc", "9007199254740993", null, null]
+ ]
+}"""
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--text_content", type=str, default="I am so happy and joyful.")
