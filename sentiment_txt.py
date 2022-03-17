@@ -25,7 +25,7 @@
 #   usage: python3 samples/v1/language_sentiment_text.py [--text_content "I am so happy and joyful."]
 
 # from: https://github.com/googleapis/python-language/blob/main/samples/v1/language_sentiment_text.py
-
+import json
 from google.cloud import language_v1
 
 def sample_analyze_sentiment(text_content):
@@ -71,9 +71,12 @@ def sample_analyze_sentiment(text_content):
     # the automatically-detected language.
     print(u"Language of the text: {}".format(response.language))
 
+def parse_udf(request_data):
+    for row in request_data['calls']:
+        print(row)    
+        sample_analyze_sentiment(row[3])
 
-
-def hello_world(request):
+def sentiment(request):
     request_json = request.get_json()
     if request.args and 'message' in request.args:
         return request.args.get('message')
@@ -85,7 +88,7 @@ def hello_world(request):
 
 
 def main():
-    import argparse
+
     # sample request example from https://cloud.google.com/bigquery/docs/reference/standard-sql/remote-functions
     sample_request="""{
  "requestId": "124ab1c",
@@ -96,16 +99,12 @@ def main():
   "key2": "v2"
  },
  "calls": [
-  [null, 1, "", "abc"],
-  ["abc", "9007199254740993", null, null]
+  [null, 1, "", "I am so happy and joyful."],
+  [null, 1, "", "I am so sad and remorseful."]
  ]
-}"""
+    }"""
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--text_content", type=str, default="I am so happy and joyful.")
-    args = parser.parse_args()
-
-    sample_analyze_sentiment(args.text_content)
+    parse_udf(json.loads(sample_request))
 
 
 if __name__ == "__main__":
