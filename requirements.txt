@@ -1,1 +1,2 @@
 google-cloud-language==2.4.1
+Flask==2.0.3
